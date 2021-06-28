@@ -1,6 +1,6 @@
 <?php
 
-namespace ReCompiler\PollyFills;
+namespace ReCompiler\PollyFills\Attributes;
 
 use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\DocParser;
@@ -26,8 +26,6 @@ class WrappedReflectionClass extends ReflectionClass
 //            $ast = (new DocParserFactory())->tokenize($this->getDocComment());
 //            dump($ast);
 //        }
-
-        dump($annotations);
 
         return [];
     }

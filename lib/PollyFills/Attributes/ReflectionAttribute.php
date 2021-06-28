@@ -1,7 +1,10 @@
 <?php
 
-namespace ReCompiler\PollyFills;
+namespace ReCompiler\PollyFills\Attributes;
 
+/**
+ * @psalm-suppress DuplicateClass
+ */
 class ReflectionAttribute
 {
     public const IS_INSTANCEOF = 2;

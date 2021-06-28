@@ -4,10 +4,9 @@ namespace ReCompiler\Traversers;
 
 use PhpParser\Node;
 use ReCompiler\AbstractTraverser;
-
 /**
  * @todo Remove Union types
- * @todo Preprocess "nullsafe" operators
+ * @todo Preprocess "null-safe" operators
  * @todo Preprocess named arguments
  * @todo Preprocess Attributes
  * @todo Preprocess "match"
@@ -30,16 +29,10 @@ class PHP74Traverser extends AbstractTraverser
     const PHP_VERSION = "7.4";
     public function enterNode(Node $node) : ?Node
     {
-        if ($node instanceof Node\Attribute) {
-            var_dump($node);
-        }
-
         // TODO: Implement 8.0 -> 7.4 preprocessing
         return $node;
     }
-
-    protected function preprocessAttributes(Node\Attribute $attribute): void
+    protected function preprocessAttributes(Node\Attribute $attribute) : void
     {
-
     }
 }

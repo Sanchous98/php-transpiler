@@ -7,7 +7,12 @@ if (!class_exists("WeakReferences")) {
     }
 }
 if (!class_exists("ReflectionAttribute")) {
-    final class ReflectionAttribute extends p\ReflectionAttribute
+    final class ReflectionAttribute extends p\Attributes\ReflectionAttribute
+    {
+    }
+}
+if (!class_exists("ReflectionFiber")) {
+    final class ReflectionFiber extends p\Fibers\ReflectionFiber
     {
     }
 }

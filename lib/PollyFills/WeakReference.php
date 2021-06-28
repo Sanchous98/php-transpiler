@@ -6,6 +6,8 @@ namespace ReCompiler\PollyFills;
  * @author Alexandru Punga <alexpunga148@gmail.com>
  *
  * WeakReference class implementation for PHP < 7.4
+ *
+ * @psalm-suppress DuplicateClass
  */
 class WeakReference
 {

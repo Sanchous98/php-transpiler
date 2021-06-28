@@ -3,7 +3,6 @@
 namespace ReCompiler\Tests\Resources;
 
 use Iterator;
-
 /**
  * @Annot(target="class")
  */

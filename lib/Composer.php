@@ -2,6 +2,9 @@
 
 namespace ReCompiler;
 
+use Composer\Package\Link;
+use Composer\Semver\Constraint\Constraint;
+use Composer\Semver\Constraint\MatchAllConstraint;
 use Exception;
 use PhpParser\Error;
 use Composer\Script\Event;
@@ -26,6 +29,7 @@ class Composer
         $phpVersion = $requires["php"]->getConstraint()->getLowerBound()->getVersion();
         [$major, $minor] = explode(".", $phpVersion);
         $traverser = new NodeTraverser();
+        /** @psalm-suppress MixedArgument, MixedMethodCall */
         $files = static::getFileList($mapping, dirname($composer->getConfig()->getConfigSource()->getName()));
         $traverser->addVisitor(TraverserFactory::factory($major, $minor));
         foreach ($files as $file) {
@@ -40,7 +44,7 @@ class Composer
             }
             $ast = $traverser->traverse($ast);
             $printer = new Standard();
-            echo $file, $printer->prettyPrintFile($ast);
+            file_put_contents($file, $printer->prettyPrintFile($ast));
         }
     }
     /**

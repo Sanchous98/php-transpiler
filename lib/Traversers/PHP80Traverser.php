@@ -4,7 +4,6 @@ namespace ReCompiler\Traversers;
 
 use PhpParser\Node;
 use ReCompiler\AbstractTraverser;
-
 /**
  * @todo Remove string key array unpacking
  * @todo Replace "never" return type by "void"
@@ -18,10 +17,9 @@ use ReCompiler\AbstractTraverser;
 class PHP80Traverser extends AbstractTraverser
 {
     public const PHP_VERSION = "8.0";
-
     public function enterNode(Node $node)
     {
         // TODO: Implement 8.1 -> 8.0 traverser
         return $node;
     }
- }
+}

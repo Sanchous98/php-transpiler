@@ -12,12 +12,9 @@ use PhpParser\Node\Expr\AssignOp;
 use PhpParser\Node\Expr\BinaryOp;
 use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\VarTagValueNode;
-use PHPStan\PhpDocParser\Lexer\Lexer;
-use PHPStan\PhpDocParser\Parser\TokenIterator;
 use ReCompiler\DocParserFactory;
 use ReCompiler\Exceptions\UnavailableException;
 use PHPStan\PhpDocParser\Ast\Type\IdentifierTypeNode;
-
 /**
  * @todo Preprocess type variants
  * @todo Preprocess __serialize and __unserialize methods
@@ -33,9 +30,6 @@ class PHP73Traverser extends PHP74Traverser
         $node = parent::enterNode($node);
         if (null === $node) {
             return null;
-        }
-        if ($node instanceof Node\Stmt\ClassLike) {
-//            var_dump($node);
         }
         if ($node instanceof ArrowFunction) {
             $node = $this->preprocessArrowFunctions($node);
@@ -125,12 +119,17 @@ class PHP73Traverser extends PHP74Traverser
     }
     protected function removeExceptionsFromToString(Node\Stmt\ClassMethod $method) : Node\Stmt\ClassMethod
     {
-        foreach ($method->stmts as $index => $stmt) {
-            if ($stmt instanceof Node\Stmt\Throw_) {
-                unset($method->stmts[$index]);
+        if (isset($method->stmts)) {
+            foreach ($method->stmts as $index => $stmt) {
+                if ($stmt instanceof Node\Stmt\Throw_) {
+                    unset($method->stmts[$index]);
+                }
             }
+            $method->stmts = array_values($method->stmts);
         }
-        $method->stmts = array_values($method->stmts);
         return $method;
+    }
+    protected function addHashExtension() : void
+    {
     }
 }
