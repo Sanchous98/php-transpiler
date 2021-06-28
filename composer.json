@@ -1,0 +1,39 @@
+{
+  "name": "sanchous98/php-preprocessor",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Alexandru Punga",
+      "email": "alexpunga148@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.3|^8.0",
+    "nikic/php-parser": "^4.10",
+    "symfony/polyfill": "^1.23",
+    "composer/composer": "^2.1",
+    "phpstan/phpdoc-parser": "^0.5",
+    "doctrine/annotations": "^1.13"
+  },
+  "require-dev": {
+    "symfony/var-dumper": "^5.3",
+    "phpunit/phpunit": "^9.5",
+    "vimeo/psalm": "^4.8"
+  },
+  "autoload": {
+    "psr-4": {
+      "ReCompiler\\": "lib/"
+    },
+    "files": ["pollyfills.php"]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "ReCompiler\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "post-autoload-dump": "ReCompiler\\Composer::postInstallCmd"
+  }
+}
