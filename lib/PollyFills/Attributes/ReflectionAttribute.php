@@ -8,10 +8,16 @@ namespace ReCompiler\PollyFills\Attributes;
 class ReflectionAttribute
 {
     public const IS_INSTANCEOF = 2;
+    /** @var string */
     protected $name;
+    /** @var int */
     protected $target;
+    /** @var bool */
     protected $isRepeated;
+    /** @var array<string, mixed> */
     protected $arguments;
+    /** @var object */
+    protected $instance;
 
     private function __construct()
     {
@@ -37,8 +43,17 @@ class ReflectionAttribute
         return $this->arguments;
     }
 
-    public function newInstance(): ReflectionAttribute
+    public function newInstance(): object
     {
+        $reflect = new \ReflectionClass($this->instance);
+        $new = $reflect->newInstance();
+        $newReflect = new \ReflectionClass($reflect->newInstance());
+
+        foreach ($this->arguments as $property => $value) {
+            $newReflect->getProperty($property)->setValue($value);
+        }
+
+        return $new;
     }
 
     private function __clone()

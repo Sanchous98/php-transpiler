@@ -2,9 +2,6 @@
 
 namespace ReCompiler;
 
-use Composer\Package\Link;
-use Composer\Semver\Constraint\Constraint;
-use Composer\Semver\Constraint\MatchAllConstraint;
 use Exception;
 use PhpParser\Error;
 use Composer\Script\Event;

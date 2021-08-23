@@ -71,7 +71,7 @@ class ReflectionFiber
      */
     public function isSuspended(): bool
     {
-        return (bool) $this->reflect->getProperty("suspended")->getValue();
+        return $this->isStarted() && !$this->reflect->getProperty("running")->getValue();
     }
 
     /**
@@ -80,7 +80,7 @@ class ReflectionFiber
      */
     public function isRunning(): bool
     {
-        return (bool) $this->reflect->getProperty("running")->getValue();
+        return $this->isStarted() && $this->reflect->getProperty("running")->getValue();
     }
 
     /**
@@ -90,6 +90,6 @@ class ReflectionFiber
      */
     public function isTerminated(): bool
     {
-        return (bool) $this->reflect->getProperty("terminated")->getValue();
+        return !$this->isStarted();
     }
 }

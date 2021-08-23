@@ -7,23 +7,27 @@ use PhpParser\Node;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ArrowFunction;
 use PhpParser\Node\Expr\Assign;
-use PhpParser\Node\Expr\Closure;
 use PhpParser\Node\Expr\AssignOp;
 use PhpParser\Node\Expr\BinaryOp;
+use PhpParser\Node\Expr\Closure;
+use PhpParser\Node\Stmt\Class_;
 use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\VarTagValueNode;
+use PHPStan\PhpDocParser\Ast\Type\IdentifierTypeNode;
 use ReCompiler\DocParserFactory;
 use ReCompiler\Exceptions\UnavailableException;
-use PHPStan\PhpDocParser\Ast\Type\IdentifierTypeNode;
+use Serializable;
 /**
  * @todo Preprocess type variants
- * @todo Preprocess __serialize and __unserialize methods
  * @todo Preprocess ReflectionReference
  * @todo Add ext-hash to composer.json
  */
 class PHP73Traverser extends PHP74Traverser
 {
     const PHP_VERSION = "7.3";
+    const SERIALIZE = "__serialize";
+    const SLEEP = "__sleep";
+    const UNSERIALIZE = "__unserialize";
     /** @throws UnavailableException */
     public function enterNode(Node $node) : ?Node
     {
@@ -48,6 +52,9 @@ class PHP73Traverser extends PHP74Traverser
         }
         if ($node instanceof Node\Name && in_array("FFI", $node->parts, true)) {
             throw new UnavailableException(sprintf("FFI is not available in PHP %s and there is no suggested solution", static::PHP_VERSION));
+        }
+        if ($node instanceof Class_) {
+            $node = $this->preprocessSerializeAndUnserialize($node);
         }
         return $node;
     }
@@ -129,7 +136,24 @@ class PHP73Traverser extends PHP74Traverser
         }
         return $method;
     }
-    protected function addHashExtension() : void
+    protected function preprocessSerializeAndUnserialize(Class_ $class): Class_
     {
+        if ($class->getMethod(self::SERIALIZE) !== null) {
+            if ($class->getMethod(self::SLEEP) === null) {
+                $class->stmts[] = new Node\Stmt\ClassMethod(self::SLEEP, ["stmts" => [new Node\Stmt\Return_(new Node\Expr\MethodCall(new Node\Expr\Variable("this"), self::SERIALIZE))], "flags" => Class_::MODIFIER_PUBLIC]);
+            }
+            if ($class->getMethod("serialize") === null) {
+                $class->stmts[] = new Node\Stmt\ClassMethod("serialize", ["stmts" => [new Node\Stmt\Return_(new Node\Expr\FuncCall(new Node\Name("serialize"), [new Node\Arg(new Node\Expr\MethodCall(new Node\Expr\Variable("this"), self::SERIALIZE))]))], "flags" => Class_::MODIFIER_PUBLIC]);
+            }
+        }
+        if ($class->getMethod(self::UNSERIALIZE) !== null && $class->getMethod("unserialize") === null) {
+            $class->stmts[] = new Node\Stmt\ClassMethod("unserialize", ["params" => [new Node\Param(new Node\Expr\Variable("data"))], "stmts" => [new Node\Stmt\Expression(new Node\Expr\MethodCall(new Node\Expr\Variable("this"), self::UNSERIALIZE, [new Node\Arg(new Node\Expr\FuncCall(new Node\Name("unserialize"), [new Node\Arg(new Node\Expr\Variable("data"))]))]))], "flags" => Class_::MODIFIER_PUBLIC]);
+        }
+        if (!count(array_filter($class->implements, function (Node\Name $name) {
+            return $name->parts[0] === Serializable::class;
+        })) && $class->getMethod("serialize") !== null && $class->getMethod("unserialize") !== null) {
+            $class->implements[] = new Node\Name("\\Serializable");
+        }
+        return $class;
     }
 }

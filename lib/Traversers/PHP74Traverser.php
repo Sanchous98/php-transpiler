@@ -32,7 +32,4 @@ class PHP74Traverser extends AbstractTraverser
         // TODO: Implement 8.0 -> 7.4 preprocessing
         return $node;
     }
-    protected function preprocessAttributes(Node\Attribute $attribute) : void
-    {
-    }
 }

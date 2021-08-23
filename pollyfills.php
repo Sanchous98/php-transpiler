@@ -16,3 +16,8 @@ if (!class_exists("ReflectionFiber")) {
     {
     }
 }
+if (!class_exists("Fiber")) {
+    final class Fiber extends p\Fibers\Fiber
+    {
+    }
+}
