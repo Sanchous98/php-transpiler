@@ -2,6 +2,7 @@
 
 namespace ReCompiler\PollyFills\Fibers;
 
+use ReflectionClass;
 use ReflectionException;
 
 /**
@@ -18,7 +19,7 @@ class ReflectionFiber
      */
     public function __construct(Fiber $fiber) {
         $this->fiber = $fiber;
-        $this->reflect = new \ReflectionClass($fiber);
+        $this->reflect = new ReflectionClass($fiber);
     }
 
     /**
@@ -71,7 +72,7 @@ class ReflectionFiber
      */
     public function isSuspended(): bool
     {
-        return (bool) $this->reflect->getProperty("suspended")->getValue();
+        return $this->isStarted() && !$this->reflect->getProperty("running")->getValue();
     }
 
     /**
@@ -80,16 +81,15 @@ class ReflectionFiber
      */
     public function isRunning(): bool
     {
-        return (bool) $this->reflect->getProperty("running")->getValue();
+        return $this->isStarted() && $this->reflect->getProperty("running")->getValue();
     }
 
     /**
-     * @return bool True if the fiber has completed execution (either returning or
-     *              throwing an exception), false otherwise.
+     * @return bool True if the fiber has completed execution (either returning or throwing an exception), false otherwise.
      * @throws ReflectionException
      */
     public function isTerminated(): bool
     {
-        return (bool) $this->reflect->getProperty("terminated")->getValue();
+        return !$this->isStarted();
     }
 }

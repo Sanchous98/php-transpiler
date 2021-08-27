@@ -3,11 +3,11 @@
 namespace ReCompiler;
 
 use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocNode;
-use PHPStan\PhpDocParser\Lexer\Lexer;
 use PHPStan\PhpDocParser\Parser\ConstExprParser;
 use PHPStan\PhpDocParser\Parser\PhpDocParser;
 use PHPStan\PhpDocParser\Parser\TokenIterator;
 use PHPStan\PhpDocParser\Parser\TypeParser;
+use PHPStan\PhpDocParser\Lexer\Lexer;
 class DocParserFactory
 {
     /** @var PhpDocParser */

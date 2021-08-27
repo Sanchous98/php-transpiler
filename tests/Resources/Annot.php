@@ -10,7 +10,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
 class Annot
 {
     public $target;
-    #[Annot(0)]
+    #[\ReCompiler\Tests\Resources\Annot(0)]
     public function __construct(int $target)
     {
     }

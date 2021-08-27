@@ -1,6 +1,6 @@
 <?php
 
-namespace ReCompiler\Traversers;
+namespace ReCompiler\Visitors;
 
 use PhpParser\Node;
 use ReCompiler\AbstractTraverser;
@@ -24,15 +24,12 @@ use ReCompiler\AbstractTraverser;
  * @todo Preprocess concatenation operator order
  * @todo Add ext-json to composer.json
  */
-class PHP74Traverser extends AbstractTraverser
+class PHP74Visitor extends AbstractTraverser
 {
-    const PHP_VERSION = "7.4";
+    public const PHP_VERSION = "7.4";
     public function enterNode(Node $node) : ?Node
     {
         // TODO: Implement 8.0 -> 7.4 preprocessing
         return $node;
-    }
-    protected function preprocessAttributes(Node\Attribute $attribute) : void
-    {
     }
 }

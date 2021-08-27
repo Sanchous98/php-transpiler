@@ -2,22 +2,27 @@
 
 namespace ReCompiler;
 
-use Composer\Package\Link;
-use Composer\Semver\Constraint\Constraint;
-use Composer\Semver\Constraint\MatchAllConstraint;
+use Composer\Script\Event;
 use Exception;
 use PhpParser\Error;
-use Composer\Script\Event;
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
+use function array_merge_recursive;
+use function explode;
+use function file_get_contents;
+use function file_put_contents;
+use function glob;
+use function rtrim;
 class Composer
 {
-    const PSR4 = "psr-4";
-    const PSR0 = "psr-0";
-    const CLASSMAP = "classmap";
-    const FILES = "files";
-    /** @throws Exception */
+    public const PSR4 = "psr-4";
+    public const PSR0 = "psr-0";
+    public const CLASSMAP = "classmap";
+    public const FILES = "files";
+    /**
+     * @throws Exception
+     */
     public static function postInstallCmd(Event $event) : void
     {
         $composer = $event->getComposer();
@@ -31,7 +36,8 @@ class Composer
         $traverser = new NodeTraverser();
         /** @psalm-suppress MixedArgument, MixedMethodCall */
         $files = static::getFileList($mapping, dirname($composer->getConfig()->getConfigSource()->getName()));
-        $traverser->addVisitor(TraverserFactory::factory($major, $minor));
+        $visitor = VisitorFactory::factory($major, $minor);
+        $traverser->addVisitor($visitor);
         foreach ($files as $file) {
             include_once $file;
         }
