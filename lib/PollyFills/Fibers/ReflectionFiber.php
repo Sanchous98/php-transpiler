@@ -2,6 +2,7 @@
 
 namespace ReCompiler\PollyFills\Fibers;
 
+use ReflectionClass;
 use ReflectionException;
 
 /**
@@ -18,7 +19,7 @@ class ReflectionFiber
      */
     public function __construct(Fiber $fiber) {
         $this->fiber = $fiber;
-        $this->reflect = new \ReflectionClass($fiber);
+        $this->reflect = new ReflectionClass($fiber);
     }
 
     /**
@@ -84,8 +85,7 @@ class ReflectionFiber
     }
 
     /**
-     * @return bool True if the fiber has completed execution (either returning or
-     *              throwing an exception), false otherwise.
+     * @return bool True if the fiber has completed execution (either returning or throwing an exception), false otherwise.
      * @throws ReflectionException
      */
     public function isTerminated(): bool

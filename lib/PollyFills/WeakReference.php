@@ -29,7 +29,7 @@ class WeakReference
      * @return object|null Returns reference on the stored object.
      *                     If reference counter returns 0, returns null and unsets object
      */
-    public function &get()
+    public function &get() : ?object
     {
         if (!$this->refcount($this->ref)) {
             unset($this->ref);

@@ -3,6 +3,7 @@
 namespace ReCompiler\PollyFills\Fibers;
 
 use Generator;
+use RuntimeException;
 use Throwable;
 
 /**
@@ -50,7 +51,7 @@ class Fiber
             $this->generator = call_user_func_array($this->callback, $args);
 
             if (!$this->generator instanceof Generator) {
-                throw new \RuntimeException("Callback must be a generator");
+                throw new RuntimeException("Callback must be a generator");
             }
         }
 
@@ -203,7 +204,7 @@ class Fiber
      * @deprecated Cannot be implemented in PHP <8.1. Usage will cause an exception. Try to use concrete variable
      *             instead
      */
-    public static function this()
+    public static function this(): ?Fiber
     {
         return null;
     }

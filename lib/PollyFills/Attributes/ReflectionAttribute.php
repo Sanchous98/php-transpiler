@@ -2,6 +2,9 @@
 
 namespace ReCompiler\PollyFills\Attributes;
 
+use ReflectionClass;
+use ReflectionException;
+
 /**
  * @psalm-suppress DuplicateClass
  */
@@ -43,11 +46,14 @@ class ReflectionAttribute
         return $this->arguments;
     }
 
+    /**
+     * @throws ReflectionException
+     */
     public function newInstance(): object
     {
-        $reflect = new \ReflectionClass($this->instance);
+        $reflect = new ReflectionClass($this->instance);
         $new = $reflect->newInstance();
-        $newReflect = new \ReflectionClass($reflect->newInstance());
+        $newReflect = new ReflectionClass($reflect->newInstance());
 
         foreach ($this->arguments as $property => $value) {
             $newReflect->getProperty($property)->setValue($value);
